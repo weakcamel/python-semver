@@ -14,6 +14,7 @@ from semver import min_ver
 from semver import max_ver
 from semver import VersionInfo
 from semver import parse_version_info
+from cli import create_parser
 
 
 SEMVERFUNCS = [
@@ -414,3 +415,27 @@ def test_parse_method_for_version_info():
     s_version = "1.2.3-alpha.1.2+build.11.e0f985a"
     v = VersionInfo.parse(s_version)
     assert str(v) == s_version
+
+
+def test_semver_cli():
+    parser = create_parser()
+
+    args = parser.parse_args(['-v'])
+    v = parse_args(args)
+    assert v == __version__
+
+    args = parser.parse_args(['--compare', '1.0.0', '2.0.0'])
+    v = parse_args(args)
+    assert v == -1
+
+    args = parser.parse_args(['--bump_major', '3.4.5'])
+    v = parse_args(args)
+    assert v == '4.0.0'
+
+    args = parser.parse_args(['--bump_minor', '3.4.5'])
+    v = parse_args(args)
+    assert v == '3.5.0'
+
+    args = parser.parse_args(['--bump_patch', '3.4.5'])
+    v = parse_args(args)
+    assert v == '3.4.6'
